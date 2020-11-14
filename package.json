@@ -1,0 +1,23 @@
+{
+  "name": "worker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prod": "npm i && npm run test && node app.js",
+    "dev": "nodemon app.js",
+    "tdd": "nodemon --exec npm run test && node app.js",
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "chai": "^4.2.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.20",
+    "mocha": "^8.2.1",
+    "public-ip": "^4.0.2"
+  }
+}
