@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prod": "npm i && npm run test && node app.js",
+    "prod": "node app.js",
     "dev": "nodemon app.js",
     "tdd": "nodemon --exec npm run test && node app.js",
     "test": "mocha"
@@ -14,10 +14,22 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
-    "chai": "^4.2.0",
+    "body-parser": "^1.19.0",
+    "connect-timeout": "^1.9.0",
     "express": "^4.17.1",
+    "express-xml-bodyparser": "^0.3.0",
+    "form-data": "^3.0.0",
+    "js-logger": "^1.6.1",
     "lodash": "^4.17.20",
-    "mocha": "^8.2.1",
+    "multer": "^1.4.2",
     "public-ip": "^4.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-mocha": "^8.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
   }
 }
