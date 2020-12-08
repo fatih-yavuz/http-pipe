@@ -1,0 +1,6 @@
+{
+  "workerPort": 5000,
+  "masterPort": 5001,
+  "responseTimeout": 5000,
+  "ipIntervalTimeout": 500
+}
