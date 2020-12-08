@@ -1,46 +1,40 @@
-const express = require('express')
-const app = express();
-const port = 80;
+const Logger = require('js-logger');
 const axios = require('axios');
-const publicIp = require('public-ip');
-const {convertExpressRequestToAxiosRequest} = require("./converter");
+const FormData = require('form-data');
+const app = require('./server');
+const { convertRequest, headerFilter } = require('./request-converter');
+const config = require('./config.json');
+const utils = require('./utils');
 
-let ip = null;
+Logger.useDefaults();
 
-async function setIp() {
-    try {
-        console.log('trying to set ip');
-        ip = await publicIp.v4();
-    } catch (e) {
-        console.log(e);
-    }
-}
+const port = process.env.PORT || config.workerPort;
 
-const interval = setInterval(() => {
-    setIp();
-    if (ip) {
-        console.log('ip interval cleared');
-        clearInterval(interval);
-    }
-}, 500);
+axios.interceptors.request.use((axiosRequestConfig) => {
+  if (axiosRequestConfig.data instanceof FormData) {
+    Object.assign(axiosRequestConfig.headers, axiosRequestConfig.data.getHeaders());
+  }
+  return axiosRequestConfig;
+});
 
 app.all('/', async (req, res) => {
-    try {
-        res.set('ip', ip);
+  try {
+    Logger.info('a request received');
+    const axiosConfig = convertRequest(req);
+    const response = await axios(axiosConfig);
 
-        const response = await axios(convertExpressRequestToAxiosRequest(req));
-
-        res.status(response.status);
-        res.set(response.headers);
-        res.send(response.data);
-    } catch (e) {
-        console.log('an error occured', e);
-        res.status(500);
-        res.send(e);
-    }
-
-})
+    const filteredResponse = headerFilter(response);
+    res.set('ip', utils.getIp());
+    res.status(filteredResponse.status);
+    res.set(filteredResponse.headers);
+    res.send(filteredResponse.data);
+  } catch (e) {
+    Logger.error('an error occurred', e);
+    res.status(utils.HTTP.NOT_FOUND);
+    res.send('sorry');
+  }
+});
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+  Logger.info(`Worker listening at ${port}`);
+});
