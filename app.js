@@ -17,7 +17,7 @@ axios.interceptors.request.use((axiosRequestConfig) => {
   return axiosRequestConfig;
 });
 
-app.all('/', async (req, res) => {
+app.all('*', async (req, res) => {
   try {
     Logger.info('a request received');
     const axiosConfig = convertRequest(req);
